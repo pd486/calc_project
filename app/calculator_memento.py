@@ -9,7 +9,7 @@ This module follows the Refactoring.Guru Memento structure:
 
 from copy import deepcopy
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 from app.calculation import Calculation
 
@@ -59,6 +59,10 @@ class CalculatorHistoryOriginator:
     def restore(self, memento: CalculatorMemento) -> None:
         """Restore history state from a memento."""
         self._history = memento.get_state()
+
+    def restore_from_history(self, history: List[Calculation]) -> None:
+        """Restore history directly from a list of calculations."""
+        self._history = deepcopy(history)
 
 
 class MementoCaretaker:
