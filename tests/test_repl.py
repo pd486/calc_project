@@ -72,3 +72,16 @@ def test_repl_operation_requires_two_numbers(capsys):
 def test_repl_empty_command():
     repl = CalculatorREPL()
     assert repl.handle_command("") is True
+
+
+def test_repl_invalid_number_is_handled_by_run(monkeypatch, capsys):
+    repl = CalculatorREPL()
+    commands = iter(["add bad 3", "exit"])
+
+    monkeypatch.setattr("builtins.input", lambda _: next(commands))
+
+    repl.run()
+
+    output = capsys.readouterr().out
+    assert "Error:" in output
+    assert "Goodbye!" in output
