@@ -67,3 +67,32 @@ def test_load_missing_csv_raises_error(tmp_path):
 
     with pytest.raises(HistoryError):
         calculator.load_from_csv()
+
+
+def test_clear_history_can_be_undone(tmp_path):
+    calculator = make_calculator(tmp_path)
+
+    calculator.calculate("add", Decimal("2"), Decimal("3"))
+    calculator.clear_history()
+
+    assert calculator.get_history() == []
+
+    assert calculator.undo() is True
+    assert len(calculator.get_history()) == 1
+
+
+def test_save_empty_history_creates_csv(tmp_path):
+    calculator = make_calculator(tmp_path)
+
+    path = calculator.save_to_csv()
+
+    assert path.endswith("history.csv")
+
+
+def test_load_empty_csv_returns_zero(tmp_path):
+    calculator = make_calculator(tmp_path)
+
+    calculator.save_to_csv()
+    count = calculator.load_from_csv()
+
+    assert count == 0
